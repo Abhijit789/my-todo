@@ -1,9 +1,16 @@
 import React, { useEffect, useRef, useState } from 'react'
 import './todo.css'
 import { MdCheck, MdDelete } from 'react-icons/md';
+
+const todoKey='reactTodo'
 const Todo1 = () => {
     const [item,setItems]=useState('');
-    const [task,setTask]=useState([]);
+    const [task,setTask]=useState(()=>{
+      const rawTodos=localStorage.getItem(todoKey)
+      if(!rawTodos) return []
+      return JSON.parse(rawTodos)
+
+    });
     const ref=useRef()
     const [dateTime,setDateTime]=useState('')
 
@@ -49,7 +56,8 @@ const Todo1 = () => {
     
       return ()=> clearInterval(interval)
     },[])
-    
+     const firstPage=task.slice(0,8)
+    localStorage.setItem(todoKey,JSON.stringify(task))
   return (
     <>
      <section className='todo-container'>
@@ -79,7 +87,7 @@ const Todo1 = () => {
             {
                 <ul>
                     {
-                task.map((cItem,index)=>{
+                      firstPage.map((cItem,index)=>{
                      return <li key={index}>
                             <span className='item' ref={ref}>{cItem}</span>
                             <div>
